@@ -13,13 +13,8 @@ app.get('/api/questions', async (req, res) => {
   try {
     let url = `https://opentdb.com/api.php?amount=5&type=multiple`;
 
-    if (category) {
-      url += `&category=${category}`;
-    }
-
-    if (difficulty) {
-      url += `&difficulty=${difficulty}`;
-    }
+    if (category) url += `&category=${category}`;
+    if (difficulty) url += `&difficulty=${difficulty}`;
 
     const response = await axios.get(url);
     res.json(response.data);
