@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz App</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz App</h1>
+
+    <!-- 🌙 Dark Mode Toggle -->
+    <label class="toggle-switch">
+      <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()" />
+      <span class="slider"></span> Dark Mode
+    </label>
+
+    <!-- 👤 User Setup -->
+    <div id="welcome-section">
+      <label>
+        Enter Your Name:
+        <input type="text" id="username" placeholder="e.g., Apurbo" />
+      </label>
+
+      <label>Category:
+        <select id="category">
+          <option value="18">Computer</option>
+          <option value="9">General Knowledge</option>
+          <option value="20">Mythology</option>
+          <option value="23">History</option>
+        </select>
+      </label>
+
+      <label>Difficulty:
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <!-- 🧪 Quiz Area -->
+    <div id="quiz-section" style="display:none;">
+      <div id="quiz-container"></div>
+      <button id="submit-btn">Submit Answers</button>
+    </div>
+
+    <!-- 🎯 Results -->
+    <div id="result"></div>
+
+    <!-- 🏆 Leaderboard -->
+    <div id="leaderboard"></div>
+
+    <!-- 🧹 Reset Leaderboard -->
+    <button onclick="resetLeaderboard()" class="btn btn-danger">🧹 Reset Leaderboard</button>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Your Script -->
+  <script src="script.js"></script>
+</body>
+
+</html>
