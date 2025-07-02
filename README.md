@@ -61,3 +61,30 @@ Chart didn’t display initially (Chart.js config issue)
 Dark mode design was not appealing – had to redesign
 
 Leaderboard format was not proper in the beginning
+
+
+✅ Day 4 – Backend Deployment & API Integration
+🔧 What I Did:
+Deployed the Express.js backend to Render.
+
+Configured CORS to allow secure communication with my Netlify frontend.
+
+Replaced local API URLs in the frontend with the live Render API endpoint.
+
+Implemented a 1-second delay and 5-second cooldown to limit API call frequency.
+
+Successfully connected frontend and backend, completing full-stack integration.
+
+Verified that the quiz loads and works correctly in real deployment.
+
+⚠️ Problems Faced:
+❌ CORS error: The browser blocked the API call due to missing Access-Control-Allow-Origin in the backend.
+
+⏱️ Too many requests issue: OpenTDB was throttling due to rapid requests.
+
+✅ Solved both by updating backend CORS policy and adding delay/cooldown in frontend.
+
+🎉 Outcome:
+The app is now fully deployed and functional online.
+
+Successfully completed full integration and testing of all core features.
