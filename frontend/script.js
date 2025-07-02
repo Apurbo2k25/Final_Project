@@ -60,9 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       })
       .catch(err => {
-        alert("❌ Failed to load quiz. Is your backend running?");
+        console.warn("⚠️ Backend not responding. Check if it's running.");
         console.error(err);
       });
+      
   };
 
   function loadQuiz() {
@@ -181,3 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return txt.value;
   }
 });
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}

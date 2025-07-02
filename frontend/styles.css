@@ -1,20 +1,32 @@
 /* 🌐 Base Reset */
-body {
+html, body {
+  height: 100%;
   margin: 0;
+  padding: 0;
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom, #e0f7fa, #ffffff);
   color: #333;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🧱 Page Wrapper */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 🧱 Container */
 .container {
   max-width: 800px;
-  height: 80vh;
   margin: 30px auto;
   padding: 20px 30px;
-  background-color: #fff;
+  background-color: #50eac6f5;
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  padding-bottom: 20px;
 }
 
 /* 🧾 Headings */
@@ -25,7 +37,7 @@ h1, h2 {
 
 h1 {
   font-size: 2.2em;
-  color: #00796b;
+  color: #04584e;
 }
 
 h2 {
@@ -60,11 +72,12 @@ button {
   border-radius: 12px;
   cursor: pointer;
   font-size: 1em;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
 button:hover {
   background-color: #00796b;
+  transform: scale(1.05);
 }
 
 /* ❓ Quiz Area */
@@ -95,11 +108,20 @@ button:hover {
 }
 
 .result-question {
-  margin-bottom: 15px;
+  background-color: #fffde7;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .result-question p {
   margin: 4px 0;
+}
+
+/* 📉 Chart */
+#myChart {
+  max-width: 100%;
+  margin-top: 20px;
 }
 
 /* 🌓 Dark Mode */
@@ -191,6 +213,23 @@ body.dark-mode .result-question {
 
 .toggle-switch input:checked + .slider::before {
   transform: translateX(20px);
+}
+
+/* 🦶 Footer */
+.app-footer {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 15px 0;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  font-size: 0.95rem;
+  margin-top: auto;
+}
+
+body.dark-mode .app-footer {
+  background-color: #222;
+  color: #ccc;
+  border-top: 1px solid #444;
 }
 
 /* 📱 Responsive */
