@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ✅ Updated API call to Render backend
-    fetch(`https://final-project-cxem.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
+    fetch(`https://final-project-1-uw1x.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
       .then(res => res.json())
       .then(data => {
         if (data.results) {
