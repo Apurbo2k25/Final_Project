@@ -3,15 +3,19 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// ✅ Enable CORS for your Netlify frontend
+app.use(cors({
+  origin: 'https://quizify2025.netlify.app/' // Replace with your actual Netlify site URL
+}));
 
+// ✅ Quiz Questions Endpoint
 app.get('/api/questions', async (req, res) => {
   const { category, difficulty } = req.query;
 
   try {
-    let url = `https://opentdb.com/api.php?amount=5&type=multiple`;
+    let url = `https://opentdb.com/api.php?amount=5&type=multiple`; // ✅ URL string wrapped in backticks
 
     if (category) url += `&category=${category}`;
     if (difficulty) url += `&difficulty=${difficulty}`;
@@ -24,6 +28,7 @@ app.get('/api/questions', async (req, res) => {
   }
 });
 
+// ✅ Start Server
 app.listen(PORT, () => {
-  console.log(`✅ Server is running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

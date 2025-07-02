@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    fetch(`http://localhost:3000/api/questions?category=${category}&difficulty=${difficulty}`)
+    // ✅ Updated API call to Render backend
+    fetch(`https://final-project-cxem.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
       .then(res => res.json())
       .then(data => {
         if (data.results) {
@@ -60,10 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       })
       .catch(err => {
-        console.warn("⚠️ Backend not responding. Check if it's running.");
+        console.warn("⚠️ Backend not responding. Check if it's deployed properly.");
         console.error(err);
       });
-      
   };
 
   function loadQuiz() {
