@@ -17,8 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let quizData = [];
   let userName = '';
   let quizMeta = { categoryName: '', difficultyName: '' };
+  let lastRequestTime = 0;
 
-  // Restore dark mode if previously enabled
+  // Restore dark mode
   if (localStorage.getItem("dark_mode") === "enabled") {
     document.body.classList.add('dark-mode');
     const toggle = document.getElementById("dark-toggle");
@@ -31,6 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.startQuiz = function () {
+    const now = Date.now();
+    if (now - lastRequestTime < 5000) {
+      return alert("⏳ Please wait a few seconds before starting another quiz.");
+    }
+    lastRequestTime = now;
+
     const nameInput = document.getElementById('username').value.trim();
     const category = document.getElementById('category').value;
     const difficulty = document.getElementById('difficulty').value;
@@ -44,26 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    // ✅ Updated API call to Render backend
-    fetch(`https://final-project-1-uw1x.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.results) {
-          quizData = data.results;
-          welcomeSection.style.display = 'none';
-          quizSection.style.display = 'block';
-          loadQuiz();
-          resultBox.innerHTML = '';
-          leaderboardBox.innerHTML = '';
-          chartCanvas.style.display = 'none';
-        } else {
-          alert("No questions found for this selection.");
-        }
-      })
-      .catch(err => {
-        console.warn("⚠️ Backend not responding. Check if it's deployed properly.");
-        console.error(err);
-      });
+    // Delay the API request by 1 second
+    setTimeout(() => {
+      fetch(`https://final-project-cxem.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.results) {
+            quizData = data.results;
+            welcomeSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuiz();
+            resultBox.innerHTML = '';
+            leaderboardBox.innerHTML = '';
+            chartCanvas.style.display = 'none';
+          } else {
+            alert("No questions found for this selection.");
+          }
+        })
+        .catch(err => {
+          console.warn("⚠️ Backend not responding. Check if it's deployed properly.");
+          console.error(err);
+        });
+    }, 1000); // 1 second delay
   };
 
   function loadQuiz() {
