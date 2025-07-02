@@ -21,16 +21,16 @@ html, body {
 .container {
   max-width: 800px;
   margin: 30px auto;
+  margin-top: 60px;
   padding: 20px 30px;
   background-color: rgba(255, 255, 255, 0.2); /* Soft white with 20% opacity */
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   flex: 1;
   padding-bottom: 20px;
-  backdrop-filter: blur(10px); /* Optional: glassmorphism effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  backdrop-filter: blur(10px); /* Glass effect */
+  -webkit-backdrop-filter: blur(10px);
 }
-
 
 /* 🧾 Headings */
 h1, h2 {
@@ -129,13 +129,15 @@ button:hover {
 
 /* 🌓 Dark Mode */
 body.dark-mode {
-  background: #121212;
+  background:#222831;
   color: #e0e0e0;
 }
 
 body.dark-mode .container {
-  background-color: #1e1e1e;
+  background-color: #393E46; /* #1A3636 with 60% opacity */
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 body.dark-mode h1,
@@ -156,7 +158,7 @@ body.dark-mode input::placeholder {
 }
 
 body.dark-mode button {
-  background-color: #26a69a;
+  background-color: #255F38;
   color: white;
 }
 
@@ -230,7 +232,7 @@ body.dark-mode .result-question {
 }
 
 body.dark-mode .app-footer {
-  background-color: #222;
+  background-color: #222831;
   color: #ccc;
   border-top: 1px solid #444;
 }
