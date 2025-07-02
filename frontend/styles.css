@@ -22,12 +22,15 @@ html, body {
   max-width: 800px;
   margin: 30px auto;
   padding: 20px 30px;
-  background-color: #50eac6f5;
+  background-color: rgba(255, 255, 255, 0.2); /* Soft white with 20% opacity */
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   flex: 1;
   padding-bottom: 20px;
+  backdrop-filter: blur(10px); /* Optional: glassmorphism effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
 }
+
 
 /* 🧾 Headings */
 h1, h2 {
