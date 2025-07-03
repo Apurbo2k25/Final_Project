@@ -20,18 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
   let quizMeta = { categoryName: '', difficultyName: '' };
   let lastRequestTime = 0;
 
-  // Restore dark mode
+  // 🌙 Restore dark mode
   if (localStorage.getItem("dark_mode") === "enabled") {
     document.body.classList.add('dark-mode');
     const toggle = document.getElementById("dark-toggle");
     if (toggle) toggle.checked = true;
   }
 
+  // 🌙 Dark mode toggle
   window.toggleDarkMode = function () {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem("dark_mode", isDark ? "enabled" : "disabled");
   };
 
+  // 🚀 Start Quiz
   window.startQuiz = async function () {
     const now = Date.now();
     if (now - lastRequestTime < 5000) {
@@ -39,10 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     lastRequestTime = now;
 
-    const nameInput = document.getElementById('username').value.trim();
+    const usernameInputEl = document.getElementById('username');
+    const nameInput = usernameInputEl ? usernameInputEl.value.trim() : '';
     const category = document.getElementById('category').value;
     const difficulty = document.getElementById('difficulty').value;
 
+    // 🧠 Name check
     if (nameInput) {
       userName = nameInput;
       localStorage.setItem("quiz_user", userName);
@@ -51,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (savedUser) {
         userName = savedUser;
       } else {
-        return alert("⚠️ Please enter your name to begin!");
+        alert("⚠️ Please enter your name to begin!");
+        welcomeSection.style.display = 'block';
+        return;
       }
     }
 
@@ -60,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    // UI Reset
+    // ⏳ Show loader and clear UI
     loader.style.display = 'block';
     welcomeSection.style.display = 'none';
     quizSection.style.display = 'none';
@@ -70,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chartCanvas?.style && (chartCanvas.style.display = 'none');
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
       const response = await fetch(
@@ -90,13 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error("⚠️ Failed to load quiz:", err);
-      alert("Backend is sleeping or network error. Please try again after a few seconds.");
+      alert("Backend is sleeping or network error. Please try again.");
       resetToWelcome();
     } finally {
       loader.style.display = 'none';
     }
   };
 
+  // 🔁 Reset to Welcome
   function resetToWelcome() {
     welcomeSection.style.display = 'block';
     quizSection.style.display = 'none';
@@ -104,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = '';
   }
 
+  // 🧩 Load Questions
   function loadQuiz() {
     container.innerHTML = '';
     quizData.forEach((q, index) => {
@@ -126,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ✅ Submit Quiz
   submitBtn.addEventListener('click', () => {
     for (let i = 0; i < quizData.length; i++) {
       const selected = document.querySelector(`input[name="question${i}"]:checked`);
@@ -184,16 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
     retakeBtn.className = "btn btn-warning mt-3";
     retakeBtn.onclick = () => {
       scrollToTop();
-      startQuiz(); // ✅ Instantly restart with saved name/settings
+      startQuiz();
     };
     resultBox.appendChild(retakeBtn);
 
     const topScores = [...allScores].sort((a, b) => b.score - a.score).slice(0, 3);
     leaderboardBox.innerHTML = `<h3>🏆 Top 3 Leaderboard</h3><ol>` +
-      topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') +
+      topScores.map(entry =>
+        `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`
+      ).join('') +
       `</ol>`;
   });
 
+  // 🗑️ Reset Leaderboard
   window.resetLeaderboard = function () {
     if (confirm("Clear leaderboard data? This cannot be undone.")) {
       localStorage.removeItem("quiz_leaderboard");
@@ -201,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // 🔀 Shuffle utility
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -209,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return array;
   }
 
+  // 🔤 Decode HTML
   function decodeHTML(html) {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -216,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ⬆️ Scroll to Top
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
