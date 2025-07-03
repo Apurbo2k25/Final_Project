@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let quizMeta = { categoryName: '', difficultyName: '' };
   let lastRequestTime = 0;
 
+  // Restore dark mode
   if (localStorage.getItem("dark_mode") === "enabled") {
     document.body.classList.add('dark-mode');
     const toggle = document.getElementById("dark-toggle");
@@ -42,16 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const category = document.getElementById('category').value;
     const difficulty = document.getElementById('difficulty').value;
 
-    if (!nameInput) {
+    if (nameInput) {
+      userName = nameInput;
+      localStorage.setItem("quiz_user", userName);
+    } else {
       const savedUser = localStorage.getItem("quiz_user");
       if (savedUser) {
         userName = savedUser;
       } else {
-        return alert("Please enter your name to begin!");
+        return alert("⚠️ Please enter your name to begin!");
       }
-    } else {
-      userName = nameInput;
-      localStorage.setItem("quiz_user", userName);
     }
 
     quizMeta = {
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
+    // UI Reset
     loader.style.display = 'block';
     welcomeSection.style.display = 'none';
     quizSection.style.display = 'none';
@@ -68,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chartCanvas?.style && (chartCanvas.style.display = 'none');
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
     try {
       const response = await fetch(
@@ -182,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     retakeBtn.className = "btn btn-warning mt-3";
     retakeBtn.onclick = () => {
       scrollToTop();
-      startQuiz();  // ✅ This restarts the quiz immediately
+      startQuiz(); // ✅ Instantly restart with saved name/settings
     };
     resultBox.appendChild(retakeBtn);
 
