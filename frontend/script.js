@@ -34,37 +34,33 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // 🚀 Start Quiz
-  window.startQuiz = async function () {
-    const now = Date.now();
-    if (now - lastRequestTime < 5000) {
-      return alert("⏳ Please wait a few seconds before starting another quiz.");
-    }
-    lastRequestTime = now;
+ window.startQuiz = async function () {
+  const now = Date.now();
+  if (now - lastRequestTime < 5000) {
+    return alert("⏳ Please wait a few seconds before starting another quiz.");
+  }
+  lastRequestTime = now;
 
-    const usernameInputEl = document.getElementById('username');
-    const nameInput = usernameInputEl ? usernameInputEl.value.trim() : '';
-    const category = document.getElementById('category').value;
-    const difficulty = document.getElementById('difficulty').value;
+  const usernameInputEl = document.getElementById('username');
+  const nameInput = usernameInputEl ? usernameInputEl.value.trim() : '';
+  const category = document.getElementById('category').value;
+  const difficulty = document.getElementById('difficulty').value;
 
-    // 🧠 Name check
-    if (nameInput) {
-      userName = nameInput;
-      localStorage.setItem("quiz_user", userName);
-    } else {
-      const savedUser = localStorage.getItem("quiz_user");
-      if (savedUser) {
-        userName = savedUser;
-      } else {
-        alert("⚠️ Please enter your name to begin!");
-        welcomeSection.style.display = 'block';
-        return;
-      }
-    }
+  // ✅ Now only accept typed name
+  if (!nameInput) {
+    return alert("⚠️ Please enter your name to begin!");
+  }
 
-    quizMeta = {
-      categoryName: categoryMap[category] || "Unknown",
-      difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
-    };
+  userName = nameInput;
+  localStorage.setItem("quiz_user", userName);
+
+  quizMeta = {
+    categoryName: categoryMap[category] || "Unknown",
+    difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
+  };
+
+  // Continue with loader, fetch, etc...
+
 
     // ⏳ Show loader and clear UI
     loader.style.display = 'block';
