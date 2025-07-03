@@ -1,7 +1,74 @@
-📚 Quiz App – Capstone Project
-🔖 Project Title:
+# 📚 Quiz App – Capstone Project
 
-Interactive Quiz Application with Dynamic Question Generation and Result Evaluation
+An interactive full-stack quiz application that allows users to take topic-based quizzes, track their scores, and view leaderboards with badges. Features include dark mode, retake quiz option, and performance graph using Chart.js.
+
+---
+
+## 🔖 Project Title
+**Interactive Quiz Application with Dynamic Question Generation and Result Evaluation**
+
+---
+
+## 🚀 Features
+
+- Dynamic question generation using Open Trivia API
+- Category and difficulty selection
+- Real-time scoring and result evaluation
+- Leaderboard with Gold/Silver/Bronze badges
+- Dark mode toggle
+- Score visualization using Chart.js
+- Retake quiz option
+- Responsive design for mobile & desktop
+- Frontend hosted on Netlify, backend on Render
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Node.js, Express.js
+- **API**: Open Trivia DB
+- **Hosting**: Netlify (frontend), Render (backend)
+- **Visualization**: Chart.js
+- **Version Control**: Git & GitHub
+
+---
+
+## 🌐 Live Deployment
+
+- 🔗 Frontend: https://quizify2025.netlify.app/
+- 🔗 Backend API: https://final-project-cxem.onrender.com/
+
+
+---
+
+## 🗂️ Folder Structure
+
+Quiz_App/
+├── backend/
+│ ├── server.js
+│ ├── package.json
+├── frontend/
+│ ├── index.html
+│ ├── script.js
+│ ├── styles.css
+├── .gitignore
+└── README.md
+---
+
+## 📦 How to Run Locally
+
+# Clone the repo
+git clone https://github.com/Apurbo2k25/Final_Project.git
+
+# Backend setup
+cd backend
+npm install
+node server.js
+
+# Open frontend/index.html in your browser
+
+📅 Progress Log
 
 ✅ Day 1 – Setup & Backend Integration
 Work Done:
@@ -35,9 +102,9 @@ Implemented submission logic and score evaluation
 
 Problems Faced:
 
-Struggled with correctly capturing selected answers
+Struggled with capturing selected answers
 
-Layout issues appeared on small screen devices
+Layout issues on small screens
 
 ✅ Day 3 – Features & Finishing Touches
 Work Done:
@@ -50,41 +117,67 @@ Integrated dark mode toggle
 
 Added Retake Quiz button
 
-Optional: Score graph with Chart.js
+Optional: Score graph using Chart.js
 
 Finalized responsive design
 
 Problems Faced:
 
-Chart didn’t display initially (Chart.js config issue)
+Chart didn't display (Chart.js config issue)
 
-Dark mode design was not appealing – had to redesign
+Redesigned dark mode for better UX
 
-Leaderboard format was not proper in the beginning
-
+Improved leaderboard format
 
 ✅ Day 4 – Backend Deployment & API Integration
-🔧 What I Did:
-Deployed the Express.js backend to Render.
+What I Did:
 
-Configured CORS to allow secure communication with my Netlify frontend.
+Deployed the Express backend to Render
 
-Replaced local API URLs in the frontend with the live Render API endpoint.
+Configured CORS to allow frontend-backend communication
 
-Implemented a 1-second delay and 5-second cooldown to limit API call frequency.
+Replaced local API URLs with live Render endpoint
 
-Successfully connected frontend and backend, completing full-stack integration.
+Implemented delay and cooldown to avoid API throttling
 
-Verified that the quiz loads and works correctly in real deployment.
+Verified frontend-backend integration in deployment
 
-⚠️ Problems Faced:
-❌ CORS error: The browser blocked the API call due to missing Access-Control-Allow-Origin in the backend.
+Problems Faced:
 
-⏱️ Too many requests issue: OpenTDB was throttling due to rapid requests.
+❌ CORS error: Blocked API due to missing headers
 
-✅ Solved both by updating backend CORS policy and adding delay/cooldown in frontend.
+⏱️ Too many requests: OpenTDB throttled responses
+
+How I Solved It:
+
+Updated CORS policy in backend
+
+Added 1-second delay and 5-second cooldown in frontend
 
 🎉 Outcome:
-The app is now fully deployed and functional online.
 
-Successfully completed full integration and testing of all core features.
+App is fully deployed and functional online
+
+Successfully integrated and tested all core features
+
+🎥 Demo Video
+🎬 Watch Demo Walkthrough
+
+(Upload to Loom, Drive, or YouTube and paste link here)
+
+📸 Screenshots
+(Optional – you can add a screenshot like this)
+
+💡 Challenges & Learnings
+Understood full-stack integration with real APIs
+
+Learned to fix CORS issues and request throttling
+
+Practiced dynamic DOM rendering, async JS, and frontend-backend coordination
+
+Explored data visualization with Chart.js
+
+📬 Contact
+If you have any questions or feedback, feel free to reach out via GitHub Issues or pull requests.
+
+
