@@ -163,10 +163,8 @@ Successfully integrated and tested all core features
 🎥 Demo Video
 🎬 Watch Demo Walkthrough
 
-(Upload to Loom, Drive, or YouTube and paste link here)
+Link: 
 
-📸 Screenshots
-(Optional – you can add a screenshot like this)
 
 💡 Challenges & Learnings
 Understood full-stack integration with real APIs
@@ -180,4 +178,62 @@ Explored data visualization with Chart.js
 📬 Contact
 If you have any questions or feedback, feel free to reach out via GitHub Issues or pull requests.
 
+
+
+## 📚 How Quizify Works
+
+Quizify is a dynamic web-based quiz app where users can test their knowledge across various categories like Computer, History, Mythology, and General Knowledge.
+
+---
+
+### 🚀 App Flow
+
+1. **Enter your name**, select a **Category** and **Difficulty level**.
+2. Click **Start Quiz**:
+   - Fetches 5 questions from the backend API.
+   - Shows a loader during the fetch.
+   - Displays the quiz questions with multiple choice options.
+
+3. **Answer all questions**, then click **Submit Quiz**:
+   - Scores your answers.
+   - Displays result summary with:
+     - Score
+     - Badge (🥇 Gold, 🥈 Silver, 🥉 Bronze, 🔰 Beginner)
+     - Correct vs. Incorrect answers
+   - Saves your score to local **Leaderboard**.
+
+4. **Click 🔁 Retake Quiz**:
+   - Instantly restarts a new quiz with the **same name, category, and difficulty**.
+   - No need to re-enter your name or reselect options.
+   - Fetches new set of questions.
+
+---
+
+### 🎯 Features
+
+| Feature             | Description                                                                 |
+|---------------------|-----------------------------------------------------------------------------|
+| ✅ Start Quiz        | Begins quiz after validating user input                                     |
+| ✅ Submit Quiz       | Scores attempt and shows detailed results                                   |
+| 🔁 Retake Quiz       | Instantly restarts the quiz with same settings                              |
+| 🏆 Leaderboard       | Stores top 3 scores locally using `localStorage`                            |
+| 🌙 Dark Mode         | Toggle for dark/light theme (remembers your choice)                         |
+| 🔄 Reset Leaderboard | Clears all saved leaderboard data                                           |
+| ⏳ Loader Timeout    | Aborts fetch request if it takes longer than 10 seconds                     |
+| ⬆️ Smooth Scroll     | Scrolls smoothly to top on quiz restart                                     |
+
+---
+
+### 🛠️ Tech Stack
+
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend API**: Open Trivia Database (via custom Express server)
+
+---
+
+### 🌐 Live Demo
+
+👉 [Quizify Live Site](https://quizify2025.netlify.app/)
+
+---
 
