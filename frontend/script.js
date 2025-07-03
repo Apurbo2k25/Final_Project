@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultBox = document.getElementById('result');
   const leaderboardBox = document.getElementById('leaderboard');
   const chartCanvas = document.getElementById('myChart');
-  const loader = document.getElementById("loader");
   const submitBtn = document.getElementById('submit-btn');
 
   const categoryMap = {
@@ -52,17 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    // UI Updates before fetch
-    loader.style.display = 'block';
+    // UI Updates
+    document.getElementById("loader").style.display = 'block';
     welcomeSection.style.display = 'none';
-    quizSection.style.display = 'none';
+    quizSection.style.display = 'block';
     container.innerHTML = '';
     resultBox.innerHTML = '';
     leaderboardBox.innerHTML = '';
-    chartCanvas?.style && (chartCanvas.style.display = 'none');
+    if (chartCanvas) chartCanvas.style.display = 'none';
 
+    const fetchStart = Date.now();
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 sec timeout
 
     try {
       const response = await fetch(
@@ -71,28 +71,30 @@ document.addEventListener('DOMContentLoaded', () => {
       );
       clearTimeout(timeout);
       const data = await response.json();
+      const fetchEnd = Date.now();
+      console.log("⏱️ Fetch time:", (fetchEnd - fetchStart) / 1000, "seconds");
 
       if (data.results && data.results.length > 0) {
         quizData = data.results;
-        quizSection.style.display = 'block';
         loadQuiz();
       } else {
-        alert("❌ No quiz questions found for this category/difficulty.");
+        alert("No questions found for this selection.");
         resetToWelcome();
       }
     } catch (err) {
-      console.error("⚠️ Failed to load quiz:", err);
-      alert("Backend is sleeping or network error. Please try again after a few seconds.");
+      console.warn("⚠️ Backend not responding or too slow.");
+      alert("Failed to load quiz questions. Please check your connection or try again later.");
+      console.error(err);
       resetToWelcome();
     } finally {
-      loader.style.display = 'none';
+      document.getElementById("loader").style.display = 'none';
     }
   };
 
   function resetToWelcome() {
     welcomeSection.style.display = 'block';
     quizSection.style.display = 'none';
-    loader.style.display = 'none';
+    document.getElementById("loader").style.display = 'none';
     container.innerHTML = '';
   }
 
@@ -100,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = '';
     quizData.forEach((q, index) => {
       const options = shuffle([...q.incorrect_answers, q.correct_answer]);
+
       const questionEl = document.createElement('div');
       questionEl.classList.add('question');
       questionEl.innerHTML = `<p><strong>${index + 1}.</strong> ${decodeHTML(q.question)}</p>`;
@@ -107,7 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const optionsHTML = options.map(opt => `
         <label>
           <input type="radio" name="question${index}" value="${decodeHTML(opt)}"> ${decodeHTML(opt)}
-        </label><br>`).join('');
+        </label><br>
+      `).join('');
 
       const optionsContainer = document.createElement('div');
       optionsContainer.classList.add('options');
@@ -174,13 +178,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const retakeBtn = document.createElement('button');
     retakeBtn.textContent = "🔁 Retake Quiz";
     retakeBtn.className = "btn btn-warning mt-3";
-    retakeBtn.onclick = resetToWelcome;
+    retakeBtn.onclick = () => {
+      document.getElementById('username').value = userName;
+      welcomeSection.style.display = 'block';
+      quizSection.style.display = 'none';
+      resultBox.innerHTML = '';
+      leaderboardBox.innerHTML = '';
+      if (chartCanvas) chartCanvas.style.display = 'none';
+    };
     resultBox.appendChild(retakeBtn);
 
     const topScores = [...allScores].sort((a, b) => b.score - a.score).slice(0, 3);
     leaderboardBox.innerHTML = `<h3>🏆 Top 3 Leaderboard</h3><ol>` +
-      topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') +
-      `</ol>`;
+      topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') + `</ol>`;
   });
 
   window.resetLeaderboard = function () {
