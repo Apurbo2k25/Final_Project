@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // 🔗 Element References
   const welcomeSection = document.getElementById('welcome-section');
   const quizSection = document.getElementById('quiz-section');
   const container = document.getElementById('quiz-container');
@@ -7,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chartCanvas = document.getElementById('myChart');
   const submitBtn = document.getElementById('submit-btn');
 
+  // 📚 Category Mapping
   const categoryMap = {
     "18": "Computer",
     "9": "General Knowledge",
@@ -14,24 +16,27 @@ document.addEventListener('DOMContentLoaded', () => {
     "23": "History"
   };
 
+  // 🧠 App State
   let quizData = [];
   let userName = '';
   let quizMeta = { categoryName: '', difficultyName: '' };
   let lastRequestTime = 0;
 
-  // Restore dark mode
+  // 🌙 Restore Dark Mode
   if (localStorage.getItem("dark_mode") === "enabled") {
     document.body.classList.add('dark-mode');
     const toggle = document.getElementById("dark-toggle");
     if (toggle) toggle.checked = true;
   }
 
+  // 🌗 Toggle Dark Mode
   window.toggleDarkMode = function () {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem("dark_mode", isDark ? "enabled" : "disabled");
   };
 
-  window.startQuiz = function () {
+  // 🚀 Start Quiz Function
+  window.startQuiz = async function () {
     const now = Date.now();
     if (now - lastRequestTime < 5000) {
       return alert("⏳ Please wait a few seconds before starting another quiz.");
@@ -51,30 +56,56 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    // Delay the API request by 1 second
-    setTimeout(() => {
-      fetch(`https://final-project-cxem.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.results) {
-            quizData = data.results;
-            welcomeSection.style.display = 'none';
-            quizSection.style.display = 'block';
-            loadQuiz();
-            resultBox.innerHTML = '';
-            leaderboardBox.innerHTML = '';
-            chartCanvas.style.display = 'none';
-          } else {
-            alert("No questions found for this selection.");
-          }
-        })
-        .catch(err => {
-          console.warn("⚠️ Backend not responding. Check if it's deployed properly.");
-          console.error(err);
-        });
-    }, 1000); // 1 second delay
+    // ⏳ UI Loading State
+    document.getElementById("loader").style.display = 'block';
+    welcomeSection.style.display = 'none';
+    quizSection.style.display = 'block';
+    container.innerHTML = '';
+    resultBox.innerHTML = '';
+    leaderboardBox.innerHTML = '';
+    chartCanvas.style.display = 'none';
+
+    const fetchStart = Date.now();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    try {
+      const response = await fetch(
+        `https://final-project-cxem.onrender.com/api/questions?category=${category}&difficulty=${difficulty}`,
+        { signal: controller.signal }
+      );
+      clearTimeout(timeout);
+
+      const data = await response.json();
+      const fetchEnd = Date.now();
+      console.log("⏱️ Fetch time:", (fetchEnd - fetchStart) / 1000, "seconds");
+
+      if (data.results && data.results.length > 0) {
+        quizData = data.results;
+        loadQuiz();
+      } else {
+        alert("No questions found for this selection.");
+        resetToWelcome();
+      }
+    } catch (err) {
+      console.warn("⚠️ Backend not responding or too slow.");
+      alert("Failed to load quiz questions. Please check your connection or try again later.");
+      console.error(err);
+      resetToWelcome();
+    } finally {
+      document.getElementById("loader").style.display = 'none';
+    }
   };
 
+  // 🔁 Reset UI to Welcome Screen
+  function resetToWelcome() {
+    welcomeSection.style.display = 'block';
+    quizSection.style.display = 'none';
+    document.getElementById("loader").style.display = 'none';
+    container.innerHTML = '';
+  }
+
+  // 🧩 Load Quiz Questions
   function loadQuiz() {
     container.innerHTML = '';
     quizData.forEach((q, index) => {
@@ -87,8 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const optionsHTML = options.map(opt => `
         <label>
           <input type="radio" name="question${index}" value="${decodeHTML(opt)}"> ${decodeHTML(opt)}
-        </label><br>
-      `).join('');
+        </label><br>`).join('');
 
       const optionsContainer = document.createElement('div');
       optionsContainer.classList.add('options');
@@ -99,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 📩 Submit Quiz & Show Result
   submitBtn.addEventListener('click', () => {
     for (let i = 0; i < quizData.length; i++) {
       const selected = document.querySelector(`input[name="question${i}"]:checked`);
@@ -152,24 +183,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultBox.innerHTML = resultHTML;
 
+    // 🔁 Retake Button
     const retakeBtn = document.createElement('button');
     retakeBtn.textContent = "🔁 Retake Quiz";
     retakeBtn.className = "btn btn-warning mt-3";
     retakeBtn.onclick = () => {
       document.getElementById('username').value = userName;
-      welcomeSection.style.display = 'block';
-      quizSection.style.display = 'none';
+      resetToWelcome();
       resultBox.innerHTML = '';
       leaderboardBox.innerHTML = '';
       chartCanvas.style.display = 'none';
     };
     resultBox.appendChild(retakeBtn);
 
+    // 🏆 Leaderboard
     const topScores = [...allScores].sort((a, b) => b.score - a.score).slice(0, 3);
     leaderboardBox.innerHTML = `<h3>🏆 Top 3 Leaderboard</h3><ol>` +
       topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') + `</ol>`;
   });
 
+  // 🧹 Reset Leaderboard
   window.resetLeaderboard = function () {
     if (confirm("Clear leaderboard data? This cannot be undone.")) {
       localStorage.removeItem("quiz_leaderboard");
@@ -177,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // 🔀 Utility: Shuffle Array
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -185,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return array;
   }
 
+  // 🔓 Utility: Decode HTML
   function decodeHTML(html) {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -192,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// 🔝 Scroll to Top Button
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
