@@ -1,14 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 🔗 Element References
   const welcomeSection = document.getElementById('welcome-section');
   const quizSection = document.getElementById('quiz-section');
   const container = document.getElementById('quiz-container');
   const resultBox = document.getElementById('result');
   const leaderboardBox = document.getElementById('leaderboard');
   const chartCanvas = document.getElementById('myChart');
+  const loader = document.getElementById("loader");
   const submitBtn = document.getElementById('submit-btn');
 
-  // 📚 Category Mapping
   const categoryMap = {
     "18": "Computer",
     "9": "General Knowledge",
@@ -16,26 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
     "23": "History"
   };
 
-  // 🧠 App State
   let quizData = [];
   let userName = '';
   let quizMeta = { categoryName: '', difficultyName: '' };
   let lastRequestTime = 0;
 
-  // 🌙 Restore Dark Mode
+  // Restore dark mode
   if (localStorage.getItem("dark_mode") === "enabled") {
     document.body.classList.add('dark-mode');
     const toggle = document.getElementById("dark-toggle");
     if (toggle) toggle.checked = true;
   }
 
-  // 🌗 Toggle Dark Mode
   window.toggleDarkMode = function () {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem("dark_mode", isDark ? "enabled" : "disabled");
   };
 
-  // 🚀 Start Quiz Function
   window.startQuiz = async function () {
     const now = Date.now();
     if (now - lastRequestTime < 5000) {
@@ -56,18 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
       difficultyName: difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
     };
 
-    // ⏳ UI Loading State
-    document.getElementById("loader").style.display = 'block';
+    // UI Updates before fetch
+    loader.style.display = 'block';
     welcomeSection.style.display = 'none';
-    quizSection.style.display = 'block';
+    quizSection.style.display = 'none';
     container.innerHTML = '';
     resultBox.innerHTML = '';
     leaderboardBox.innerHTML = '';
-    chartCanvas.style.display = 'none';
+    chartCanvas?.style && (chartCanvas.style.display = 'none');
 
-    const fetchStart = Date.now();
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
     try {
       const response = await fetch(
@@ -75,42 +70,36 @@ document.addEventListener('DOMContentLoaded', () => {
         { signal: controller.signal }
       );
       clearTimeout(timeout);
-
       const data = await response.json();
-      const fetchEnd = Date.now();
-      console.log("⏱️ Fetch time:", (fetchEnd - fetchStart) / 1000, "seconds");
 
       if (data.results && data.results.length > 0) {
         quizData = data.results;
+        quizSection.style.display = 'block';
         loadQuiz();
       } else {
-        alert("No questions found for this selection.");
+        alert("❌ No quiz questions found for this category/difficulty.");
         resetToWelcome();
       }
     } catch (err) {
-      console.warn("⚠️ Backend not responding or too slow.");
-      alert("Failed to load quiz questions. Please check your connection or try again later.");
-      console.error(err);
+      console.error("⚠️ Failed to load quiz:", err);
+      alert("Backend is sleeping or network error. Please try again after a few seconds.");
       resetToWelcome();
     } finally {
-      document.getElementById("loader").style.display = 'none';
+      loader.style.display = 'none';
     }
   };
 
-  // 🔁 Reset UI to Welcome Screen
   function resetToWelcome() {
     welcomeSection.style.display = 'block';
     quizSection.style.display = 'none';
-    document.getElementById("loader").style.display = 'none';
+    loader.style.display = 'none';
     container.innerHTML = '';
   }
 
-  // 🧩 Load Quiz Questions
   function loadQuiz() {
     container.innerHTML = '';
     quizData.forEach((q, index) => {
       const options = shuffle([...q.incorrect_answers, q.correct_answer]);
-
       const questionEl = document.createElement('div');
       questionEl.classList.add('question');
       questionEl.innerHTML = `<p><strong>${index + 1}.</strong> ${decodeHTML(q.question)}</p>`;
@@ -129,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 📩 Submit Quiz & Show Result
   submitBtn.addEventListener('click', () => {
     for (let i = 0; i < quizData.length; i++) {
       const selected = document.querySelector(`input[name="question${i}"]:checked`);
@@ -183,26 +171,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultBox.innerHTML = resultHTML;
 
-    // 🔁 Retake Button
     const retakeBtn = document.createElement('button');
     retakeBtn.textContent = "🔁 Retake Quiz";
     retakeBtn.className = "btn btn-warning mt-3";
-    retakeBtn.onclick = () => {
-      document.getElementById('username').value = userName;
-      resetToWelcome();
-      resultBox.innerHTML = '';
-      leaderboardBox.innerHTML = '';
-      chartCanvas.style.display = 'none';
-    };
+    retakeBtn.onclick = resetToWelcome;
     resultBox.appendChild(retakeBtn);
 
-    // 🏆 Leaderboard
     const topScores = [...allScores].sort((a, b) => b.score - a.score).slice(0, 3);
     leaderboardBox.innerHTML = `<h3>🏆 Top 3 Leaderboard</h3><ol>` +
-      topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') + `</ol>`;
+      topScores.map(entry => `<li>${entry.name} — ${entry.category} (${entry.difficulty}): ${entry.score}/${entry.total}</li>`).join('') +
+      `</ol>`;
   });
 
-  // 🧹 Reset Leaderboard
   window.resetLeaderboard = function () {
     if (confirm("Clear leaderboard data? This cannot be undone.")) {
       localStorage.removeItem("quiz_leaderboard");
@@ -210,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 🔀 Utility: Shuffle Array
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -219,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return array;
   }
 
-  // 🔓 Utility: Decode HTML
   function decodeHTML(html) {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -227,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// 🔝 Scroll to Top Button
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
